@@ -17,6 +17,10 @@ export default function Footer() {
             <li><Link href="/newsletter" className="hover:underline">Newsletter</Link></li>
             <li><Link href="/blog" className="hover:underline">Blog</Link></li>
             <li><Link href="/local-spotlight" className="hover:underline">Local Spotlight</Link></li>
+            <li><Link href="/shop" className="hover:underline">Shop</Link></li>
+            <li><Link href="/advertise" className="hover:underline">Advertise</Link></li>
+            <li><Link href="/about" className="hover:underline">About</Link></li>
+            <li><Link href="/contact" className="hover:underline">Contact</Link></li>
           </ul>
         </div>
         {/* Column 3 */}

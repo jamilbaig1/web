@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
+import { FiArrowRight } from "react-icons/fi";
 import Image from "next/image";
 import { Blog } from "../../lib/fetchBlogs";
 import { BlogCategory } from "../../lib/fetchBlogCategories";
 
-export default function BlogListWithLoadMore({ allBlogs, categories = [] }: { allBlogs: Blog[], categories?: BlogCategory[] }) {
+export default function BlogListWithLoadMore({ allBlogs, categories = [] , all }: { allBlogs: Blog[], categories?: BlogCategory[] , all?: boolean }) {
   const [visibleCount, setVisibleCount] = useState(3);
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState("");
@@ -27,10 +28,12 @@ export default function BlogListWithLoadMore({ allBlogs, categories = [] }: { al
   const blogs = filteredBlogs.slice(0, visibleCount);
   const allLoaded = visibleCount >= filteredBlogs.length;
 
+  const allBlog = all;
+
   return (
     <>
       {/* Search and Filter Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-[70%_30%] lg:grid-cols-[80%_20%] gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-[60%_40%] lg:grid-cols-[70%_30%] gap-4 mb-8">
         <div className="relative flex items-center w-full min-w-0">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" /></svg>
@@ -79,7 +82,7 @@ export default function BlogListWithLoadMore({ allBlogs, categories = [] }: { al
           <div className="col-span-full text-center text-gray-500 text-lg py-12">No Blog Found</div>
         ) : (
           blogs.map((blog) => (
-            <div key={blog._id} className="bg-white shadow rounded overflow-hidden flex flex-col h-full">
+            <div key={blog._id} className="bg-white shadow rounded overflow-hidden flex flex-col h-full relative">
               {blog.image && (
                 <Image
                   src={blog.image}
@@ -108,32 +111,68 @@ export default function BlogListWithLoadMore({ allBlogs, categories = [] }: { al
                     day: 'numeric',
                   })}
                 </p>
-                <p className="text-xs md:text-sm text-gray-700 my-4">
-                  {blog.description}
+                <p className="text-xs md:text-sm text-gray-700 my-6">
+                  {blog.description.split(" ").slice(0, 20).join(" ")}
+                  {blog.description.split(" ").length > 20 && "..."}
                 </p>
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-1 text-[#f97316] font-semibold hover:gap-3 transition-all duration-200 absolute bottom-3"
+                >
+                  Read More
+                  <FiArrowRight className="text-lg" />
+                </Link>
               {/* Blog detail page removed: no detail link */}
               </div>
             </div>
           ))
         )}
       </div>
-      {!allLoaded && (
+      {all ? (
+        !allLoaded && (
+          <div className="flex justify-center">
+            <button
+              onClick={handleLoadMore}
+              className="px-6 py-3 bg-[#f97316] text-white rounded font-semibold text-lg flex items-center gap-2 min-w-[180px] justify-center cursor-pointer hover:bg-transparent hover:text-[#f97316] border border-[#f97316] transition-colors duration-200"
+              disabled={isPending}
+            >
+              {isPending && (
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              {isPending ? "Loading..." : "Load More"}
+            </button>
+          </div>
+        )
+      ) : (
         <div className="flex justify-center">
-          <button
-            onClick={handleLoadMore}
+          <Link
+            href="/blog"
             className="px-6 py-3 bg-[#f97316] text-white rounded font-semibold text-lg flex items-center gap-2 min-w-[180px] justify-center cursor-pointer hover:bg-transparent hover:text-[#f97316] border border-[#f97316] transition-colors duration-200"
-            disabled={isPending}
           >
-            {isPending && (
-              <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-              </svg>
-            )}
-            {isPending ? 'Loading...' : 'Load More Blogs'}
-          </button>
+            View All Blog
+          </Link>
         </div>
       )}
+
     </>
   );
 }

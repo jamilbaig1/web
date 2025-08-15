@@ -12,6 +12,13 @@ import BlogSection from "./components/BlogSection";
 import { fetchSpotlights } from "../lib/fetchSpotlights";
 import { fetchSpotlightCategories } from "../lib/fetchSpotlightCategories";
 import SpotlightSection from "./components/SpotlightSection";
+import TopBannerSections from './components/TopBannerSections';
+import MiddelBanner from './components/MiddelBanner';
+import BottomBanner from './components/BottomBanner';
+import SideBar from './components/SideBar';
+import { fetchTopBanner } from '@/lib/fetchTopBanner';
+import { fetchMiddleBanner } from '@/lib/fetchMiddleBanner';
+import { fetchSideBar } from '@/lib/fetchSidebar';
 
 type BannerData = {
   backgroundImage?: {
@@ -48,12 +55,29 @@ export default async function HomePage() {
   const blogCategories = await fetchBlogCategories();
   const allSpotlights = await fetchSpotlights();
   const spotlightCategories = await fetchSpotlightCategories();
+  const topBanner = await fetchTopBanner();
+  const middleBanner = await fetchMiddleBanner();
+  const sidebar = await fetchSideBar();
   const bgImage = banner?.backgroundImage?.asset?.url || '';
 
+  const topBannerTitle = topBanner?.text || '';
+  const topBannerImg = topBanner?.imageUrl || '';
+  const topBannerlink = topBanner?.buttonLink || '';
+  
+  const middleBannerTitle = middleBanner?.text || '';
+  const middleBannerImg = middleBanner?.imageUrl || '';
+  const middleBannerlink = middleBanner?.buttonLink || '';
+  
   // Hydrate events on client for pagination
   // Use a wrapper ClientComponent for event list
   return (
     <div className="main-content-area">
+
+      {/*Top banner Section  */}
+      <section className="container mx-auto px-5">
+        <TopBannerSections bgImage={topBannerImg} text={topBannerTitle} viewLink={topBannerlink} />
+      </section>
+
       {/* Banner Section */}
       <section
         className="hero-bg-image flex items-center justify-center text-white px-5 relative overflow-hidden"
@@ -88,29 +112,56 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Events Section */}
-      <section className="py-12 px-0 w-full bg-white">
-        <div className="main-content mx-auto px-5">
-          <h2 className="text-3xl font-semibold mb-6 text-center">Events</h2>
-          <EventSection allEvents={allEvents} categories={categories} />
+      <div className="main-content flex flex-col lg:flex-row gap-5">
+        {/* Main Content */}
+        <div className="flex-1">
+
+          {/* Events Section */}
+          <section className="py-12 px-0 w-full bg-white text-black">
+            <div className="main-content mx-auto px-5">
+              <h2 className="text-3xl font-semibold mb-6 text-center">Events</h2>
+              <EventSection allEvents={allEvents} categories={categories} />
+            </div>
+          </section>
         </div>
-      </section>
+
+        {/* Sidebar */}
+        <div className="w-full lg:w-70  mt-0 lg:mt-26 overflow-y-auto">
+          <SideBar  sidebar = { sidebar }  />
+        </div>
+      </div>
 
       {/* Blog Section */}
-      <section className="py-12 px-0 w-full bg-gray-50">
-        <div className="main-content mx-auto px-5">
-          <h2 className="text-3xl font-semibold mb-6 text-center">Blog</h2>
-          <BlogSection allBlogs={allBlogs} categories={blogCategories} />
-        </div>
-      </section>
+          <section className="py-12 px-0 w-full bg-gray-50 text-black">
+            <div className="main-content mx-auto px-5">
+              <h2 className="text-3xl font-semibold mb-6 text-center">Blog</h2>
+              <BlogSection allBlogs={allBlogs} categories={blogCategories} all={false} />
+            </div>
+          </section>
 
-      {/* Spotlight Section */}
-      <section className="py-12 px-0 w-full bg-white">
-        <div className="main-content mx-auto px-5">
-          <h2 className="text-3xl font-semibold mb-6 text-center">Local Spotlight</h2>
-          <SpotlightSection allSpotlights={allSpotlights} categories={spotlightCategories} />
-        </div>
-      </section>
+          {/* Middle Banner Section */}
+          <section className="container mx-auto px-5 mt-5">
+            <MiddelBanner bgImage={middleBannerImg} text={middleBannerTitle}  viewLink={middleBannerlink}/>
+          </section> 
+
+          {/* Spotlight Section */}
+          <section className="py-12 px-0 w-full bg-white text-black">
+            <div className="main-content mx-auto px-5">
+              <h2 className="text-3xl font-semibold mb-6 text-center">Local Spotlight</h2>
+              <SpotlightSection
+                allSpotlights={allSpotlights}
+                categories={spotlightCategories}
+                all={false}
+              />
+            </div>
+          </section>
+
+          {/* Bottom Banner Section */}
+          <section className="container mx-auto px-5 flex  text-black">
+            <div className="main-content mx-auto px-5 flex justify-center items-center  rounded-xl bg-gradient-to-r from-[#F97316] to-[#FACC15]">
+              <BottomBanner />
+            </div>
+          </section>
     </div>
   );
 }

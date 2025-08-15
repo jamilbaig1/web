@@ -2,13 +2,16 @@
 import React, { useState, useTransition } from "react";
 import Image from "next/image";
 import { Spotlight, SpotlightCategory } from "../../types/spotlight";
+import Link from "next/link";
 
-export default function SpotlightListWithLoadMore({ allSpotlights, categories = [] }: { allSpotlights: Spotlight[], categories?: SpotlightCategory[] }) {
+export default function SpotlightListWithLoadMore({ allSpotlights, categories = [] , all }: { allSpotlights: Spotlight[], categories?: SpotlightCategory[] , all?: boolean }) {
   const [visibleCount, setVisibleCount] = useState(3);
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState("");
   const [showCategories, setShowCategories] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const showall = all;
 
   const handleLoadMore = () => {
     startTransition(() => {
@@ -28,7 +31,7 @@ export default function SpotlightListWithLoadMore({ allSpotlights, categories = 
   return (
     <>
       {/* Search and Filter Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-[70%_30%] lg:grid-cols-[80%_20%] gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-[60%_40%] lg:grid-cols-[70%_30%] gap-4 mb-8">
         <div className="relative flex items-center w-full min-w-0">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" /></svg>
@@ -105,9 +108,11 @@ export default function SpotlightListWithLoadMore({ allSpotlights, categories = 
                     </span>
                   )}
                 </div>
-                <p className="text-xs sm:text-sm md:text-base text-gray-700 my-2">
-                  {spotlight.description}
-                </p>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-700 my-2">
+                    {spotlight.description.split(" ").slice(0, 20).join(" ")}
+                    {spotlight.description.split(" ").length > 20 && "..."}
+                  </p>
+
                 {spotlight.offerText && (
                   <div className="inline-block px-2 py-1 my-3 sm:px-3 sm:py-1 sm:my-4" style={{ background: '#e6f9ed', color: '#1ca97c', borderRadius: '8px', fontWeight: 300, fontSize: '14px' }}>
                     {spotlight.offerText}
@@ -128,21 +133,49 @@ export default function SpotlightListWithLoadMore({ allSpotlights, categories = 
           ))
         )}
       </div>
-      {!allLoaded && (
+
+      {showall ? (
+        !allLoaded && (
+          <div className="flex justify-center">
+            <button
+              onClick={handleLoadMore}
+              className="px-6 py-3 bg-[#f97316] text-white rounded font-semibold text-lg flex items-center gap-2 min-w-[180px] justify-center cursor-pointer hover:bg-transparent hover:text-[#f97316] border border-[#f97316] transition-colors duration-200 disabled:opacity-50"
+              disabled={isPending}
+            >
+              {isPending && (
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              {isPending ? "Loading..." : "Load More"}
+            </button>
+          </div>
+        )
+      ) : (
         <div className="flex justify-center">
-          <button
-            onClick={handleLoadMore}
+          <Link
+            href="/local-spotlight"
             className="px-6 py-3 bg-[#f97316] text-white rounded font-semibold text-lg flex items-center gap-2 min-w-[180px] justify-center cursor-pointer hover:bg-transparent hover:text-[#f97316] border border-[#f97316] transition-colors duration-200"
-            disabled={isPending}
           >
-            {isPending && (
-              <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-              </svg>
-            )}
-            {isPending ? 'Loading...' : 'Load More Spotlights'}
-          </button>
+            View All Sportlight
+          </Link>
         </div>
       )}
     </>

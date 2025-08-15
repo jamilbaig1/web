@@ -34,7 +34,7 @@ export default function EventListWithLoadMore({ allEvents, categories = [] }: { 
   return (
     <>
       {/* Search and Filter Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-[70%_30%] lg:grid-cols-[80%_20%] gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-[60%_40%] lg:grid-cols-[70%_30%] gap-4 mb-8">
         <div className="relative flex items-center w-full min-w-0">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" /></svg>
