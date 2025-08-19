@@ -1,22 +1,18 @@
 "use client";
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { FiArrowRight } from "react-icons/fi";
-import { EventItem } from "../../../types/event";
+import Image from "next/image";
+import { Directory } from "../../lib/fetchDirectory";
+import { DirectoryCategory } from "../../lib/fetchDirectoryCategories";
 
-type Category = {
-  _id: string;
-  title: string;
-};
-
-export default function EventListWithLoadMore({
-  allEvents,
+export default function DirectoryListWithLoadMore({
+  allDirectories,
   categories = [],
   all,
 }: {
-  allEvents: EventItem[];
-  categories?: Category[];
+  allDirectories: Directory[];
+  categories?: DirectoryCategory[];
   all?: boolean;
 }) {
   const [visibleCount, setVisibleCount] = useState(3);
@@ -31,19 +27,18 @@ export default function EventListWithLoadMore({
     });
   };
 
-  // Filter events by search and category
-  const filteredEvents = allEvents.filter((event) => {
-    const matchesSearch = event.title
+  // Filter logic
+  const filteredDirectories = allDirectories.filter((directory) => {
+    const matchesSearch = directory.name
       .toLowerCase()
       .includes(search.toLowerCase());
     const matchesCategory =
-      !selectedCategory ||
-      (event.categories ?? []).some((cat) => cat._id === selectedCategory);
+      !selectedCategory || directory.category?._id === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const events = filteredEvents.slice(0, visibleCount);
-  const allLoaded = visibleCount >= filteredEvents.length;
+  const directories = filteredDirectories.slice(0, visibleCount);
+  const allLoaded = visibleCount >= filteredDirectories.length;
 
   return (
     <>
@@ -53,7 +48,7 @@ export default function EventListWithLoadMore({
         <div className="relative w-full">
           <input
             type="text"
-            placeholder="Search events..."
+            placeholder="Search directories..."
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -138,64 +133,45 @@ export default function EventListWithLoadMore({
         </div>
       </div>
 
-      {/* Events Grid */}
+      {/* Directory Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
-        {events.length === 0 ? (
+        {directories.length === 0 ? (
           <div className="col-span-full text-center text-gray-500 text-lg py-12">
-            No Event Found
+            No Directory Found
           </div>
         ) : (
-          events.map((event) => (
+          directories.map((directory) => (
             <div
-              key={event._id}
+              key={directory._id}
               className="bg-white shadow-md rounded-2xl overflow-hidden flex flex-col hover:shadow-lg transition duration-200"
             >
-              {event.image && (
+              {directory.logo && (
                 <Image
-                  src={event.image}
-                  alt={event.title}
+                  src={directory.logo}
+                  alt={directory.name}
                   width={600}
                   height={300}
                   className="w-full h-44 object-cover"
                 />
               )}
               <div className="p-5 flex flex-col flex-grow">
-                {/* Categories */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {(event.categories ?? []).map((cat) => (
-                    <span
-                      key={cat._id}
-                      className="text-xs font-medium text-orange-500"
-                    >
-                      {cat.title}
-                    </span>
-                  ))}
-                </div>
-
+                {directory.category && (
+                  <span className="text-xs font-medium text-orange-500 mb-2">
+                    {directory.category.title}
+                  </span>
+                )}
                 <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-800">
-                  {event.title}
+                  {directory.name}
                 </h3>
-                <p className="text-xs md:text-sm text-gray-500 mb-2">
-                  {new Date(event.publishedAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
                 <p className="text-sm text-gray-600 flex-grow mb-4">
-                  {event.description?.split(" ").slice(0, 20).join(" ")}
-                  {event.description &&
-                    event.description.split(" ").length > 20 &&
-                    "..."}
+                  {directory.description.split(" ").slice(0, 20).join(" ")}
+                  {directory.description.split(" ").length > 20 && "..."}
                 </p>
                 <Link
-                  href={
-                    event.slug?.current ? `/event/${event.slug.current}` : "#"
-                  }
+                  href={directory.link}
                   className="inline-flex items-center gap-2 text-orange-500 font-semibold mt-auto hover:gap-3 transition-all duration-200"
-                  prefetch={false}
                 >
-                  View Details
+                  View
                   <FiArrowRight className="text-lg" />
                 </Link>
               </div>
@@ -205,7 +181,7 @@ export default function EventListWithLoadMore({
       </div>
 
       {/* Load More / View All */}
-    {
+      {all ? (
         !allLoaded && (
           <div className="flex justify-center">
             <button
@@ -213,11 +189,20 @@ export default function EventListWithLoadMore({
               className="px-6 py-3 bg-orange-500 text-white rounded-xl font-medium text-base flex items-center gap-2 min-w-[180px] justify-center hover:bg-transparent hover:text-orange-500 border border-orange-500 transition disabled:opacity-50 cursor-pointer"
               disabled={isPending}
             >
-              {isPending ? "Loading..." : "Load More Events"}
+              {isPending ? "Loading..." : "Load More"}
             </button>
           </div>
         )
-    }
+      ) : (
+        <div className="flex justify-center">
+          <Link
+            href="/directory"
+            className="px-6 py-3 bg-orange-500 text-white rounded-xl font-medium text-base flex items-center gap-2 min-w-[200px] justify-center hover:bg-transparent hover:text-orange-500 border border-orange-500 transition"
+          >
+            View All Directories
+          </Link>
+        </div>
+      )}
     </>
   );
 }

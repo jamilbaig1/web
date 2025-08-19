@@ -1,7 +1,7 @@
 import React from 'react'
-import SpotlightSection from '../components/SpotlightSection'
-import { fetchSpotlights } from "../../lib/fetchSpotlights";
-import { fetchSpotlightCategories } from "../../lib/fetchSpotlightCategories";
+import SpotlightSection from '../../components/SpotlightSection'
+import { fetchSpotlights } from "../../../lib/fetchSpotlights";
+import { fetchSpotlightCategories } from "../../../lib/fetchSpotlightCategories";
 import { PiShootingStarFill } from "react-icons/pi";
 import { FaBuilding } from "react-icons/fa6";
 import Link from 'next/link';
@@ -36,7 +36,7 @@ const LocalSpotlight = async () => {
                 </div>
                 <h3 className="text-xl font-bold mb-2">Want Your Business Featured?</h3>
                 <p className="text-gray-600 mb-4 max-w-xl mx-auto">
-                    We love showcasing local talent and establishments. Reach out to us for sponsorship opportunities or to be considered for a future sportlight. 
+                    We love showcasing local talent and establishments. Reach out to us for sponsorship opportunities or to be considered for a future spotlight. 
                 </p>
                 <Link href='/contact' className="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded">
                     Learn More & Get in Touch

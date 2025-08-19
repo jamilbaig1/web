@@ -1,5 +1,5 @@
 import React from 'react'
-import AdvertisePage from '../components/AdvertisePage'
+import AdvertisePage from '../../components/AdvertisePage'
 
 const Advertise = () => {
   return (

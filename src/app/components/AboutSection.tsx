@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const GetInvolvedSection = () => {
   return (
-    <section className="main-content mx-auto px-6 py-12 text-black">
+    <section className="main-content mx-auto px-6 pb-12 text-black">
       <div className="bg-gradient-to-l to-orange-100 via-white from-yellow-100 p-10 rounded-lg shadow-sm mb-12">
         <h2 className="text-4xl text-orange-500 font-bold text-center mb-8">
           How to Get Involved

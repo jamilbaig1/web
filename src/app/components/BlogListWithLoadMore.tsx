@@ -6,7 +6,15 @@ import Image from "next/image";
 import { Blog } from "../../lib/fetchBlogs";
 import { BlogCategory } from "../../lib/fetchBlogCategories";
 
-export default function BlogListWithLoadMore({ allBlogs, categories = [] , all }: { allBlogs: Blog[], categories?: BlogCategory[] , all?: boolean }) {
+export default function BlogListWithLoadMore({
+  allBlogs,
+  categories = [],
+  all,
+}: {
+  allBlogs: Blog[];
+  categories?: BlogCategory[];
+  all?: boolean;
+}) {
   const [visibleCount, setVisibleCount] = useState(3);
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState("");
@@ -20,55 +28,102 @@ export default function BlogListWithLoadMore({ allBlogs, categories = [] , all }
   };
 
   // Filter blogs by search and category
-  const filteredBlogs = allBlogs.filter(blog => {
-    const matchesSearch = blog.title.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = !selectedCategory || (blog.category?._id === selectedCategory);
+  const filteredBlogs = allBlogs.filter((blog) => {
+    const matchesSearch = blog.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesCategory =
+      !selectedCategory || blog.category?._id === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
   const blogs = filteredBlogs.slice(0, visibleCount);
   const allLoaded = visibleCount >= filteredBlogs.length;
 
-  const allBlog = all;
-
   return (
     <>
-      {/* Search and Filter Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-[60%_40%] lg:grid-cols-[70%_30%] gap-4 mb-8">
-        <div className="relative flex items-center w-full min-w-0">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" /></svg>
-          </span>
+      {/* Search + Filter */}
+      <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-4 mb-10">
+        {/* Search */}
+        <div className="relative w-full">
           <input
             type="text"
-            placeholder="Search Blogs"
+            placeholder="Search blogs..."
             value={search}
-            onChange={e => { setSearch(e.target.value); setVisibleCount(3); }}
-            className="w-full border border-gray-300 rounded px-4 py-2 pl-10 focus:outline-none focus:ring-0 focus:border-gray-300 hover:border-gray-300 text-base sm:text-base md:text-lg"
-            style={{ boxShadow: 'none' }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setVisibleCount(3);
+            }}
+            className="w-full border border-gray-300 rounded-xl px-4 py-2 pl-10 text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
           />
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
+              />
+            </svg>
+          </span>
         </div>
-        <div className="relative min-w-0">
+
+        {/* Filter */}
+        <div className="relative">
           <button
             type="button"
-            className="w-full px-4 py-2 border border-[#f97316] rounded text-[#f97316] font-semibold bg-white hover:bg-[#f97316] hover:text-white transition-colors duration-200 flex items-center justify-center gap-2 text-base sm:text-base md:text-lg"
-            onClick={() => setShowCategories(v => !v)}
-            style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'}}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{display: 'inline'}}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6.414 6.414A1 1 0 0013 13.414V19a1 1 0 01-1.447.894l-2-1A1 1 0 019 18v-4.586a1 1 0 00-.293-.707L2.293 6.707A1 1 0 012 6V4z" /></svg>
-            <span style={{display: 'inline'}}>Filter by Category</span>
+            className="w-full px-4 py-2 border border-orange-500 rounded-xl text-orange-500 font-semibold bg-white hover:bg-orange-500 hover:text-white transition flex items-center justify-center gap-2"
+            onClick={() => setShowCategories((v) => !v)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M3 4h18M4 8h16M6 12h12M9 16h6"
+              />
+            </svg>
+            Filter by Category
           </button>
           {showCategories && (
-            <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded shadow max-h-60 overflow-y-auto">
+            <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
               <button
-                className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${selectedCategory === null ? 'font-bold' : ''}`}
-                onClick={() => { setSelectedCategory(null); setShowCategories(false); setVisibleCount(3); }}
+                className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${
+                  selectedCategory === null ? "font-bold text-orange-600" : ""
+                }`}
+                onClick={() => {
+                  setSelectedCategory(null);
+                  setShowCategories(false);
+                  setVisibleCount(3);
+                }}
               >
                 All Categories
               </button>
-              {categories.map(cat => (
+              {categories.map((cat) => (
                 <button
                   key={cat._id}
-                  className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${selectedCategory === cat._id ? 'font-bold' : ''}`}
-                  onClick={() => { setSelectedCategory(cat._id); setShowCategories(false); setVisibleCount(3); }}
+                  className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${
+                    selectedCategory === cat._id
+                      ? "font-bold text-orange-600"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedCategory(cat._id);
+                    setShowCategories(false);
+                    setVisibleCount(3);
+                  }}
                 >
                   {cat.title}
                 </button>
@@ -77,87 +132,63 @@ export default function BlogListWithLoadMore({ allBlogs, categories = [] , all }
           )}
         </div>
       </div>
-      <div style={{ marginTop: '32px' }} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+
+      {/* Blog Grid (styled like directory) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
         {blogs.length === 0 ? (
-          <div className="col-span-full text-center text-gray-500 text-lg py-12">No Blog Found</div>
+          <div className="col-span-full text-center text-gray-500 text-lg py-12">
+            No Blog Found
+          </div>
         ) : (
           blogs.map((blog) => (
-            <div key={blog._id} className="bg-white shadow rounded overflow-hidden flex flex-col h-full relative">
+            <div
+              key={blog._id}
+              className="bg-white shadow-md rounded-2xl overflow-hidden flex flex-col hover:shadow-lg transition duration-200"
+            >
               {blog.image && (
                 <Image
                   src={blog.image}
                   alt={blog.title}
                   width={600}
                   height={300}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-44 object-cover"
                 />
               )}
-              <div className="p-4 flex flex-col h-full">
-                <div className="flex flex-wrap gap-2 mb-3">
+              <div className="p-5 flex flex-col flex-grow">
                 {blog.category && (
-                  <span
-                    className="text-xs py-1"
-                    style={{ color: '#f97316' }}
-                  >
+                  <span className="text-xs font-medium text-orange-500 mb-2">
                     {blog.category.title}
                   </span>
                 )}
-                </div>
-                <h3 className="text-lg md:text-xl font-bold mb-2">{blog.title}</h3>
-                <p className="text-xs md:text-sm text-gray-600 mb-2">
-                  {new Date(blog.publishedAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
-                <p className="text-xs md:text-sm text-gray-700 my-6">
+                <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-800">
+                  {blog.title}
+                </h3>
+                <p className="text-sm text-gray-600 flex-grow mb-4">
                   {blog.description.split(" ").slice(0, 20).join(" ")}
                   {blog.description.split(" ").length > 20 && "..."}
                 </p>
                 <Link
-                  href="/"
-                  className="inline-flex items-center gap-1 text-[#f97316] font-semibold hover:gap-3 transition-all duration-200 absolute bottom-3"
+                  href={`/blog/${blog._id}`}
+                  className="inline-flex items-center gap-2 text-orange-500 font-semibold mt-auto hover:gap-3 transition-all duration-200"
                 >
                   Read More
                   <FiArrowRight className="text-lg" />
                 </Link>
-              {/* Blog detail page removed: no detail link */}
               </div>
             </div>
           ))
         )}
       </div>
+
+      {/* Load More / View All */}
       {all ? (
         !allLoaded && (
           <div className="flex justify-center">
             <button
               onClick={handleLoadMore}
-              className="px-6 py-3 bg-[#f97316] text-white rounded font-semibold text-lg flex items-center gap-2 min-w-[180px] justify-center cursor-pointer hover:bg-transparent hover:text-[#f97316] border border-[#f97316] transition-colors duration-200"
+              className="px-6 py-3 bg-orange-500 text-white rounded-xl font-medium ttext-base flex items-center gap-2 min-w-[180px] justify-center hover:bg-transparent hover:text-orange-500 border border-orange-500 transition disabled:opacity-50 cursor-pointer"
               disabled={isPending}
             >
-              {isPending && (
-                <svg
-                  className="animate-spin h-5 w-5 mr-2 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                  ></path>
-                </svg>
-              )}
               {isPending ? "Loading..." : "Load More"}
             </button>
           </div>
@@ -166,13 +197,12 @@ export default function BlogListWithLoadMore({ allBlogs, categories = [] , all }
         <div className="flex justify-center">
           <Link
             href="/blog"
-            className="px-6 py-3 bg-[#f97316] text-white rounded font-semibold text-lg flex items-center gap-2 min-w-[180px] justify-center cursor-pointer hover:bg-transparent hover:text-[#f97316] border border-[#f97316] transition-colors duration-200"
+            className="px-6 py-3 bg-orange-500 text-white rounded-xl font-medium text-base flex items-center gap-2 min-w-[200px] justify-center hover:bg-transparent hover:text-orange-500 border border-orange-500 transition"
           >
-            View All Blog
+            View All Blogs
           </Link>
         </div>
       )}
-
     </>
   );
 }

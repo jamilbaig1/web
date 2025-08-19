@@ -19,6 +19,7 @@ import SideBar from './components/SideBar';
 import { fetchTopBanner } from '@/lib/fetchTopBanner';
 import { fetchMiddleBanner } from '@/lib/fetchMiddleBanner';
 import { fetchSideBar } from '@/lib/fetchSidebar';
+import NewsletterBox from './components/NewsLetterBox';
 
 type BannerData = {
   backgroundImage?: {
@@ -108,6 +109,7 @@ export default async function HomePage() {
                 {banner.buttonTwoText}
               </a>
             )}
+            <NewsletterBox/>
           </div>
         </div>
       </section>
@@ -126,10 +128,15 @@ export default async function HomePage() {
         </div>
 
         {/* Sidebar */}
-        <div className="w-full lg:w-70  mt-0 lg:mt-26 overflow-y-auto">
+        <div className="w-full max-h-165 lg:w-70  mt-0 lg:mt-26 overflow-y-auto">
           <SideBar  sidebar = { sidebar }  />
         </div>
       </div>
+
+          {/* Middle Banner Section */}
+          <section className="container mx-auto px-5 mt-5">
+            <MiddelBanner bgImage={middleBannerImg} text={middleBannerTitle}  viewLink={middleBannerlink}/>
+          </section>
 
       {/* Blog Section */}
           <section className="py-12 px-0 w-full bg-gray-50 text-black">
@@ -137,11 +144,6 @@ export default async function HomePage() {
               <h2 className="text-3xl font-semibold mb-6 text-center">Blog</h2>
               <BlogSection allBlogs={allBlogs} categories={blogCategories} all={false} />
             </div>
-          </section>
-
-          {/* Middle Banner Section */}
-          <section className="container mx-auto px-5 mt-5">
-            <MiddelBanner bgImage={middleBannerImg} text={middleBannerTitle}  viewLink={middleBannerlink}/>
           </section> 
 
           {/* Spotlight Section */}

@@ -16,7 +16,7 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ( {sidebar}) => {
   return (
-    <aside className="max-h-180 overflow-x-auto lg:overflow-y-auto bg-gray-100 p-3 flex flex-row lg:flex-col gap-5 lg:gap-0 rounded-md ">
+    <aside className="overflow-x-auto lg:overflow-y-auto bg-gray-100 p-3 flex flex-row lg:flex-col gap-5 lg:gap-0 rounded-md ">
       {sidebar.map((item) => (
         <div key={item._id} className="mb-6 flex-shrink-0 lg:flex-shrink">
           {/* Image with Overlay */}

@@ -43,8 +43,6 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    padding-left: 1rem;
-    padding-right: 1rem;
 }
 
 
@@ -77,8 +75,6 @@ body {
   .main-content,
   .main-footer {
     max-width: 640px;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
   }
 }
 @media (max-width: 768px) {
@@ -86,8 +82,8 @@ body {
   .main-content,
   .main-footer {
     max-width: 768px;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
   }
 }
 @media (max-width: 1024px) {
