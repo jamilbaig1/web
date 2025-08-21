@@ -21,12 +21,12 @@ interface ShopSectionProps {
 }
 
 export default function ShopSection({ shopItems }: ShopSectionProps) {
-  const [toasts, setToasts] = useState<{ id: number; message: string }[]>([]);
+  const [toasts, setToasts] = useState<{ id: number; message: string ; type: string }[]>([]);
   const { addToCart } = useCart();
 
-  const showToast = (message: string) => {
+  const showToast = (message: string, type : string) => {
     const id = Date.now();
-    setToasts((prev) => [...prev, { id, message }]);
+    setToasts((prev) => [...prev, { id, message , type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 3000);
@@ -37,7 +37,7 @@ export default function ShopSection({ shopItems }: ShopSectionProps) {
       {/* Header */}
       <div className="text-center mb-12">
         <div className="flex justify-center mb-4">
-          <FiBox className="h-14 w-14 text-orange-500" />
+          <FiBox className="h-16 w-16 text-orange-500" />
         </div>
         <h2 className="text-4xl font-bold text-orange-500">
           The Local Loop Shop
@@ -100,7 +100,7 @@ export default function ShopSection({ shopItems }: ShopSectionProps) {
                       price: item.price,
                       qty: 1,
                     });
-                    showToast(`${item.title} added to cart!`);
+                    showToast(`${item.title} added to cart!`, 'success');
                   }}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold text-sm transition
                     ${
@@ -131,6 +131,7 @@ export default function ShopSection({ shopItems }: ShopSectionProps) {
         <Toast
           key={toast.id}
           message={toast.message}
+          type={toast.type}
           onClose={() =>
             setToasts((prev) => prev.filter((t) => t.id !== toast.id))
           }

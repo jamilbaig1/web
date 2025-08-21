@@ -17,7 +17,7 @@ const LocalSpotlight = async () => {
         {/* Header */}
             <div className="text-center mb-12">
                 <div className="flex justify-center mb-4">
-                    <PiShootingStarFill className="h-15 w-15 text-orange-500" />
+                    <PiShootingStarFill className="h-16 w-16 text-orange-500" />
                 </div>
                 <h2 className="text-4xl font-bold text-orange-500">
                         Local Business Spotlight

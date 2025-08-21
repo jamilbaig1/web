@@ -19,7 +19,7 @@ const DirectoryPage = async () => {
           {/* Icon */}
           <div className="flex justify-center mb-4">
             <div className="flex justify-center mb-4">
-                <FiLayers className="h-15 w-15 text-orange-500" />
+                <FiLayers className="h-16 w-16 text-orange-500" />
             </div>
           </div>
           {/* Title */}

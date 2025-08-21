@@ -183,7 +183,7 @@ export default function DirectoryListWithLoadMore({
       {/* Load More / View All */}
       {all ? (
         !allLoaded && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-5">
             <button
               onClick={handleLoadMore}
               className="px-6 py-3 bg-orange-500 text-white rounded-xl font-medium text-base flex items-center gap-2 min-w-[180px] justify-center hover:bg-transparent hover:text-orange-500 border border-orange-500 transition disabled:opacity-50 cursor-pointer"

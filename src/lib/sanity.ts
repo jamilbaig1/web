@@ -11,6 +11,13 @@ export const config = {
 
 export const sanityClient = createClient(config);
 
+// Secure client (write, server-only)
+export const writeClient = createClient({
+  ...config,
+  token: process.env.SANITY_API_TOKEN,
+  useCdn: false,
+});
+
 const builder = imageUrlBuilder(sanityClient);
 
 export function urlFor(source: SanityImageSource) {

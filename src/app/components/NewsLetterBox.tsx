@@ -23,6 +23,7 @@ const NewsletterBox: React.FC<NewsletterProps> = ({
           style={{
             width: iframeWidth,
             height: iframeHeight,
+            maxHeight: "60px",
             margin: 0,
             borderRadius: "0px",
             backgroundColor: "transparent",

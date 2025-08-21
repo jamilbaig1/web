@@ -14,7 +14,7 @@ const Newsletter: React.FC = () => {
           {/* Icon */}
           <div className="flex justify-center mb-4">
             <span>
-              <IoNewspaper size={60} className="text-orange-500" />
+              <IoNewspaper  className="text-orange-500 size-16" />
             </span>
           </div>
 

@@ -95,7 +95,7 @@ export default function HeaderClient() {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute right-0 top-23 bg-[#20293a] text-white rounded shadow-lg border border-gray-700 z-50 animate-fade-in min-w-[180px]">
+        <div className="lg:hidden absolute right-0 top-19 bg-[#20293a] text-white rounded shadow-lg border border-gray-700 z-50 animate-fade-in min-w-[180px]">
           <nav className="flex flex-col py-4 px-6 gap-2">
             {menuItems.map((item) => {
               const isActive =
